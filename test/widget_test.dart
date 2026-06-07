@@ -1,30 +1,63 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+// Widget test for the home screen — verifies the key landing sections render.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:uni_edu_mobile/main.dart';
+import 'package:uni_edu_mobile/screens/home/home_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Home screen renders the main section headings', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Section subtitles are unique strings, so they make reliable anchors.
+    expect(
+      find.text('Hệ thống quản lý học tập toàn diện với công nghệ AI tiên tiến'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Quy trình đơn giản, minh bạch cho cả gia sư và học sinh'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Đầy đủ các môn học theo chương trình phổ thông, từ lớp 1 đến lớp 12'),
+      findsOneWidget,
+    );
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('How it works toggle switches to the student flow', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Tutor flow is shown first.
+    expect(find.text('Nhận lương'), findsOneWidget);
+
+    // The toggle sits below the fold, so scroll it into view before tapping.
+    final studentTab = find.text('Dành cho Học sinh');
+    await tester.ensureVisible(studentTab);
+    await tester.pumpAndSettle();
+    await tester.tap(studentTab);
+    await tester.pumpAndSettle();
+
+    // Student flow is now shown instead.
+    expect(find.text('Báo cáo cho phụ huynh'), findsOneWidget);
+    expect(find.text('Nhận lương'), findsNothing);
+  });
+
+  testWidgets('Drawer exposes the section nav links', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+
+    // Open the navigation drawer via the app bar hamburger.
+    tester.state<ScaffoldState>(find.byType(Scaffold)).openDrawer();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tính năng'), findsWidgets);
+    expect(find.text('Cách hoạt động'), findsWidgets);
+    expect(find.text('Môn học'), findsWidgets);
+    expect(find.text('Tìm gia sư'), findsWidgets);
+  });
+
+  testWidgets('Footer renders brand and copyright', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+
+    expect(find.text('© 2025 UNI-EDU. All rights reserved.'), findsOneWidget);
+    expect(find.text('Khám phá'), findsOneWidget);
   });
 }
