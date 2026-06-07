@@ -4,6 +4,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../widgets/gradient_text.dart';
+import '../../auth/register_screen.dart';
+import '../../auth/register_tutor_screen.dart';
 import 'section_container.dart';
 
 /// Top hero of the home page: tagline, headline, value bullets, CTAs and stats.
@@ -99,7 +101,9 @@ class HeroSection extends StatelessWidget {
                   ),
                   textStyle: AppTextStyles.button,
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -119,7 +123,9 @@ class HeroSection extends StatelessWidget {
                   ),
                   textStyle: AppTextStyles.button,
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const RegisterTutorScreen()),
+                ),
                 child: const Text('Đăng ký làm gia sư'),
               ),
             ],
